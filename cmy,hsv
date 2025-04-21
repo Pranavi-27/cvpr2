@@ -1,0 +1,17 @@
+ 
+import cv2 
+import numpy as np 
+ 
+image = cv2.imread("image2.jpg") 
+ 
+rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
+cmy = 1 - (rgb / 255.0) # CMY is computed as 1 - RGB 
+cmy = (cmy * 255).astype(np.uint8) # Convert back to uint8 for display 
+hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) 
+ 
+cv2.imshow("Original Image", cv2.resize(image, (500, 300))) 
+cv2.imshow("CMY Image", cv2.resize(cmy, (500, 300))) 
+cv2.imshow("HSV Image", cv2.resize(hsv, (500, 300))) 
+ 
+cv2.waitKey(0) 
+cv2.destroyAllWindows()
