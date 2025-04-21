@@ -1,0 +1,30 @@
+import cv2 
+import numpy as np 
+import matplotlib.pyplot as plt 
+ 
+def marr_hildreth_edge_detection(image_path, sigma=1.4, threshold=10): 
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) 
+    smoothed = cv2.GaussianBlur(image, (5, 5), sigma) 
+    laplacian = cv2.Laplacian(smoothed, cv2.CV_64F) 
+    edge_image = np.zeros_like(laplacian, dtype=np.uint8) 
+    rows, cols = laplacian.shape 
+ 
+    for i in range(1, rows - 1): 
+        for j in range(1, cols - 1): 
+            patch = laplacian[i-1:i+2, j-1:j+2] 
+            min_val, max_val = patch.min(), patch.max() 
+             
+            if min_val < 0 and max_val > 0 and abs(max_val - min_val) > threshold: 
+                edge_image[i, j] = 255 
+ 
+    return image, smoothed, laplacian, edge_image 
+ 
+image_path = 'image2.jpg'  
+original, smoothed, laplacian, edges = marr_hildreth_edge_detection(image_path) 
+ 
+plt.figure(figsize=(12, 6)) 
+plt.subplot(1, 4, 1), plt.imshow(original, cmap='gray'), plt.title('Original') 
+plt.subplot(1, 4, 2), plt.imshow(smoothed, cmap='gray'), plt.title('Gaussian Blur') 
+plt.subplot(1, 4, 3), plt.imshow(laplacian, cmap='gray'), plt.title('Laplacian') 
+plt.subplot(1, 4, 4), plt.imshow(edges, cmap='gray'), plt.title('Edges') 
+plt.show()
